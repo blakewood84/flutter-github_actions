@@ -16,7 +16,7 @@ jobs:
       # environment.
       matrix:
         device:
-        - "iPhone 13"
+        - "iPhone 13 (11DE7AF9-E77A-44F2-BECE-D8F9F69766B2)"
       # When set to true, GitHub cancels all in-progress jobs if any        
       # matrix job fails.
       fail-fast: false
