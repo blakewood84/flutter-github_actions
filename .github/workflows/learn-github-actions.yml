@@ -1,16 +1,37 @@
-name: learn-github-actions
+name: integration-test
 run-name: ${{ github.actor }} is learning GitHub Actions
 on:
   pull_request:
     branches:
       - main
 jobs:
-  check-bats-version:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '14'
-      - run: npm install -g bats
-      - run: bats -v
+  integration-test:
+    strategy:
+      matrix:
+        device:
+          - "iPhone 13 (15.2)"
+        fail-fast: false
+      runs-on: macOS-latest
+      steps:
+        - name: "List all simulators"
+          run: "xcrun -instruments -s"
+
+        - name: "Start Simulator"
+          run: |
+            UDID=$(
+              xcrun instruments -s |
+              awk \
+                -F ' *[][]' \
+                -V 'device=${{ matrix.device }}' \
+                '$1 == device { print $2 }'
+            )
+            xcrun simctl boot "${UDID:?No Simulator with this name found}"
+        
+        - uses: actions/checkout@v3
+        - uses: subosito/flutter-action@v2
+            with:
+              flutter-version: '3.0.5'
+              channel: 'stable'
+        
+        - name: "Run Tests"
+          run: "flutter test"
