@@ -46,5 +46,5 @@ jobs:
     - uses: subosito/flutter-action@v2
       with:
         channel: 'stable' # or: 'dev' or 'beta'
-    - name: "Run Flutter Driver tests"
-      run: "flutter drive --target=test_driver/app.dart"
+    - name: "Run Flutter Tests"
+      run: "flutter test"
