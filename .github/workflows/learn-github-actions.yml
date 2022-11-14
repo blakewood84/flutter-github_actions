@@ -29,9 +29,7 @@ jobs:
       run: "xcrun simctl list"
     - name: "Start Simulator"
       run: |
-        UDID=$(
-          xcrun simctl list devices | awk '/iPhone 13/ {gsub(/[()]/,""); a=$3} END{ print a;}'
-        )
+        UDID=$(xcrun simctl list devices | awk '/iPhone 13/ {gsub(/[()]/,""); a=$3} END{ print a;}')
         xcrun simctl boot $UDID
     # The branch or tag ref that triggered the workflow will be 
     # checked out.
