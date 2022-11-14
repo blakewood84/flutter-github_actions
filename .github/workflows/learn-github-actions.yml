@@ -35,7 +35,7 @@ jobs:
       - name: "Delete Unavailable Devices"
         run: "xcrun simctl delete unavailable"
 
-      - name: "List all simulators"
+      - name: "List All Simulators"
         run: "xcrun simctl list devices"
 
       - name: "Start Simulator"
