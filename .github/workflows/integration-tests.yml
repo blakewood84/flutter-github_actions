@@ -42,4 +42,4 @@ jobs:
       with:
         channel: 'stable' # or: 'dev' or 'beta'
     - name: "Run Flutter Tests"
-      run: "flutter "
+      run: "flutter test integration_test"
