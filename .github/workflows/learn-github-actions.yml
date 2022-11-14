@@ -24,22 +24,29 @@ jobs:
     runs-on: macOS-latest
     # Contains a sequence of tasks.
     steps:
-    # A name for your step to display on GitHub.
-    - name: "List all simulators"
-      run: "xcrun simctl list devices"
-    - name: "Start Simulator"
-      run: |
-        UDID=$(xcrun simctl list devices | awk '/iPhone 13/ {gsub(/[()]/,""); a=$3} END{ print a;}')
-        echo $UDID
-        xcrun simctl boot $UDID
-    # The branch or tag ref that triggered the workflow will be 
-    # checked out.
-    # https://github.com/actions/checkout
-    - uses: actions/checkout@v3
-    # Sets up a flutter environment.
-    # https://github.com/marketplace/actions/flutter-action
-    - uses: subosito/flutter-action@v2
-      with:
-        channel: 'stable' # or: 'dev' or 'beta'
-    - name: "Run Flutter Tests"
-      run: "flutter test"
+      - uses: actions/checkout@v3
+
+      - name: Cache Packages
+        uses: actions/cache@v3
+        with:
+          path: ${{ runner.tool_cache }}/flutter
+          key: flutter-3.1-stable
+      # A name for your step to display on GitHub.
+      - name: "Delete Unavailable Devices"
+        run: "xcrun simctl delete unavailable"
+
+      - name: "List All Simulators"
+        run: "xcrun simctl list devices"
+
+      - name: "Start Simulator"
+        run: |
+          UDID=$(xcrun simctl list devices | awk '/iPhone 13/ {gsub(/[()]/,""); a=$3} END{ print a;}')
+          echo $UDID
+          xcrun simctl boot $UDID
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable' # or: 'dev' or 'beta'
+          cache: true
+          cache-key: 'flutter-:os:-:channel:-:version:-:arch:-:hash:' # optional, change this to force refresh cache
+          cache-path: ${{ runner.tool_cache }}/flutter
