@@ -37,24 +37,16 @@ jobs:
 
       - name: "List all simulators"
         run: "xcrun simctl list devices"
-        
+
       - name: "Start Simulator"
         run: |
           UDID=$(xcrun simctl list devices | awk '/iPhone 13/ {gsub(/[()]/,""); a=$3} END{ print a;}')
           echo $UDID
           xcrun simctl boot $UDID
-      # The branch or tag ref that triggered the workflow will be 
-      # checked out.
-      # https://github.com/actions/checkout
-      
-      # Sets up a flutter environment.
-      # https://github.com/marketplace/actions/flutter-action
+
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable' # or: 'dev' or 'beta'
           cache: true
           cache-key: 'flutter-:os:-:channel:-:version:-:arch:-:hash:' # optional, change this to force refresh cache
-          cache-path: ${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch # optional, change this to specify the cache path
-      
-      - name: "Run Flutter Tests"
-        run: "flutter test"
+          cache-path: ${{ runner.tool_cache }}/flutter
