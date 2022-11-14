@@ -30,13 +30,9 @@ jobs:
     - name: "Start Simulator"
       run: |
         UDID=$(
-          xcrun simctl list |
-          awk \
-            -F ' *[][]' \
-            -v 'device=${{ matrix.device }}' \
-            '$1 == device { print $2 }'
+          xcrun simctl list devices | awk '/iPhone 13/ {gsub(/[()]/,""); a=$3} END{ print a;}'
         )
-        xcrun simctl boot 11DE7AF9-E77A-44F2-BECE-D8F9F69766B2
+        xcrun simctl boot "${UDID:?No Simulator Found}"
     # The branch or tag ref that triggered the workflow will be 
     # checked out.
     # https://github.com/actions/checkout
